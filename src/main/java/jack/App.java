@@ -9,8 +9,9 @@ import java.io.IOException;
 public class App {
     static String help = "\nThree parameters must be entered in the following order:\n" +
             " source (-yelp | -ta)\n" +
-            " # of results (# must be divisible by 10 and cannot be 0)\n" +
-            " location (-nyc for NYC vendors or 5-digit zip code)\n";
+            " # of results (# must be divisible by 10, under 100, and cannot be 0)\n" +
+            " location (-nyc for NYC vendors or 5-digit zip code)\n" + 
+            "Example: ./reviewscrape -yelp 40 94038";
 
     public static void error(String err){
         System.out.println("Error: " + err + "\n" + help);
