@@ -9,8 +9,8 @@ import java.io.IOException;
 public class App {
     static String help = "\nThree parameters must be entered in the following order:\n" +
             " source (-yelp | -ta)\n" +
-            " # of results (# must divisible by 10, under 100, and cannot be 0)\n" +
-            " location (-nyc for NYC vendors or 5-digit zip code)\n" + 
+            " # of results (# must be divisible by 10 and cannot be 0)\n" +
+            " location (-nyc for NYC vendors or 5-digit zip code)\n" +
             "Example: ./reviewscrape -yelp 40 94038\n";
 
     public static void error(String err){
@@ -29,7 +29,10 @@ public class App {
         int num = 0;
         String location = "";
 
-        if(args[0].equals("-h") || args.length == 0){
+        if(args.length == 0){
+            error("No args specified.");
+            System.exit(1);
+        } else if(args[0].equals("-h")){
             System.out.println(help);
             System.exit(1);
         }
@@ -49,10 +52,12 @@ public class App {
             error("Number must be under 100.");
             // System.out.println("Error: Number must be under 100.");
             System.exit(1);
-        } else if(num % 10 != 0 || num == 0) {
-            error("Number is zero or not divisible by 10.");
+        } else if(num == 0) {
+            error("Number cannot be zero.");
             //System.out.println("Error: Number is zero or not a multiple of 10.");
             System.exit(1);
+        } else if(num % 10 != 0){
+            num = num / 10 * 10;
         }
         if(args[2].equalsIgnoreCase("-nyc")) location = "New%20York%2C%20NY";
         else {

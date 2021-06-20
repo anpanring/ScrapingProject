@@ -15,12 +15,12 @@
   * Source of data (Yelp/Tripadvisor)
   
 ## How to run
-Download the project. From within the project directory, use the command ./reviewscrape with these three
+From within the project directory, use the command ./reviewscrape with these three
 parameters in the following order:
 1. Source: options are either -yelp for Yelp or -ta for Tripadvisor
 2. Number of results: any number that is divisible by 10, under 100, and not 0.
 3. Location: Can either use -nyc for New York businesses or specify a 5-digit
-zip code. (WARNING: Can only use -nyc for Tripadvisor)
+zip code.
 
 Example: ./reviewscrape -yelp 40 94038  
 This command would return a .csv file with 40 results from where I live in
@@ -28,10 +28,17 @@ Moss Beach.
 
 Results will be written to file "new.csv" in the project folder.
 
+## How to build
+Since this project was built using Apache Maven, the best way to build 
+this project is to use the "mvn package" command in the Terminal. Since I also 
+used Maven's shade plugin to create a uber-jar that contains the external
+libraries for this project, the command I repeatedly used to build my 
+project was "mvn package shade:shade". The executable jar then shows up in 
+the "target" directory within the project.
+
 ## What I would do next with more time
  * Find gift card information
  * Find email info from Yelp
- * Location specification for Tripadvisor
  * Try to speed up the program by reorganizing the code
  * More error checking
  
