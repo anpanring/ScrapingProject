@@ -18,7 +18,7 @@
 From within the project directory, use the command ./reviewscrape with these three
 parameters in the following order:
 1. Source: options are either -yelp for Yelp or -ta for Tripadvisor
-2. Number of results: any number that is divisible by 10 and not 0.
+2. Number of results: any number that is divisible by 10, under 100, and not 0.
 3. Location: Can either use -nyc for New York businesses or specify a 5-digit
 zip code.
 
