@@ -29,7 +29,7 @@ public class App {
         int num = 0;
         String location = "";
 
-        if(args[0].equals("-h")){
+        if(args[0].equals("-h") || args.length == 0){
             System.out.println(help);
             System.exit(1);
         }
