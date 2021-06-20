@@ -20,7 +20,7 @@ parameters in the following order:
 1. Source: options are either -yelp for Yelp or -ta for Tripadvisor
 2. Number of results: any number that is divisible by 10, under 100, and not 0.
 3. Location: Can either use -nyc for New York businesses or specify a 5-digit
-zip code.
+zip code. (WARNING: Can only use -nyc for Tripadvisor)
 
 Example: ./reviewscrape -yelp 40 94038  
 This command would return a .csv file with 40 results from where I live in
@@ -39,6 +39,7 @@ the "target" directory within the project.
 ## What I would do next with more time
  * Find gift card information
  * Find email info from Yelp
+ * Location specification for Tripadvisor
  * Try to speed up the program by reorganizing the code
  * More error checking
  
