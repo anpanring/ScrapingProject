@@ -28,14 +28,6 @@ Moss Beach.
 
 Results will be written to file "new.csv" in the project folder.
 
-## How to build
-Since this project was built using Apache Maven, the best way to build 
-this project is to use the "mvn package" command in the Terminal. Since I also 
-used Maven's shade plugin to create a uber-jar that contains the external
-libraries for this project, the command I repeatedly used to build my 
-project was "mvn package shade:shade". The executable jar then shows up in 
-the "target" directory within the project.
-
 ## What I would do next with more time
  * Find gift card information
  * Find email info from Yelp
