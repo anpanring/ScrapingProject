@@ -20,7 +20,7 @@ parameters in the following order:
 1. Source: options are either -yelp for Yelp or -ta for Tripadvisor
 2. Number of results: any number within 0 < # < 100.
 3. Location: Can either use -nyc for New York businesses or specify a 5-digit
-zip code.
+zip code. (Note: -ta currently only takes -nyc location)
 
 Example: ./reviewscrape -yelp 40 94038  
 This command would return a .csv file with 40 results from where I live in
