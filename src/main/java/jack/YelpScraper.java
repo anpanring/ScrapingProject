@@ -19,7 +19,11 @@ public class YelpScraper {
     public ArrayList<String[]> results(){
         ArrayList<String[]> scrapeResults = new ArrayList<String[]>();
         String url;
-        for(int start = 0; start < numResults; start += 10) {
+        int leftover = numResults % 10; //4
+        int numPages;
+        if(numResults % 10 == 0) numPages = numResults;
+        else numPages = (numResults / 10 + 1) * 10 ; //10
+        for(int start = 0; start < numPages; start += 10) {
             url = "https://www.yelp.com/search?find_desc=Restaurants&find_loc=" + location + "&ns=1&start=" + String.valueOf(start);
             Document page = null;
             try { //Connecting to site
@@ -36,15 +40,18 @@ public class YelpScraper {
                 }
                 System.out.println("Success");
             }
-            int sponsored = 0;
-            System.out.print("Scraping results " + String.valueOf(start+1) + " - " + String.valueOf(start+10));
+            //int sponsored = 0;
             Elements links = page.select("div.container__09f24__21w3G");
-            for(Element link : links) {
-                sponsored++;
-                if(sponsored < 3) continue;
-                else if (sponsored == 13) break;
+            int num;
+            if(start + 10 > numResults) num = leftover;
+            else num = links.size() - 3;
+            System.out.print("Scraping results " + String.valueOf(start+1) + " - " + String.valueOf(start + num));
+            for(int i = 3; i < num + 3; i++) {
+                //if(i < 3) continue;
+                //if (i == 13) break;
                 String[] info = new String[10]; //Array for adding to CSV
                 Document site = null;
+                Element link = links.get(i);
                 try { //Connecting to restaurant's Yelp page
                     site = Jsoup.connect("https://www.yelp.com" + link.selectFirst("a.css-166la90").attr("href")).get();
                 } catch (Exception e) {
@@ -66,7 +73,13 @@ public class YelpScraper {
                 }
                 info[0] = link.selectFirst("a.css-166la90").text(); //Merchant Name
                 try { //Address
-                    info[1] = n.selectFirst("p.css-e81eai").text();
+                    Element address = n.selectFirst("address");
+                    Elements spans = address.select("span");
+                    String addy = "";
+                    for(Element span : spans){
+                        addy += span.text();
+                    }
+                    info[1] = addy;
                 } catch (Exception e) {
                     info[1] = "failed to fetch address";
                 }
@@ -106,7 +119,6 @@ public class YelpScraper {
 
                 }*/
                 scrapeResults.add(info);
-                //csvWriter.writeNext(info);
                 System.out.print(".");
             }
             System.out.println("");

@@ -21,6 +21,7 @@ public class TAScraper {
         int leftOver = numResults % 30;
         String url;
         int counter = 0;
+        //System.out.println("Scraping results");
         for(int k = 0; k < numPages; k++){
             if(k == 0) url = "https://www.tripadvisor.com/Restaurants-g60763-New_York_City_New_York.html";
             else url = "https://www.tripadvisor.com/Restaurants-g60763-oa" + k*30 + "-New_York_City_New_York.html";
@@ -50,21 +51,24 @@ public class TAScraper {
                 String[] info = new String[10]; //Array for adding to CSV
                 Element item;
                 try {
-                    item = list.selectFirst("[data-test='" + String.valueOf(i) + "_list_item']");
+                    item = list.selectFirst("[data-test='" + i + "_list_item']");
                 } catch (Exception e3) {
                     System.out.println("Error: Location only has " + i + " restaurants.");
                     break;
                 }
                 Document site = null;
-                try {
+                try { //Visiting business's Tripadvisor page
                     site = Jsoup.connect("https://www.tripadvisor.com/" + item.selectFirst("a._15_ydu6b").attr("href")).get();
                 } catch (Exception e) {
                     System.out.print("Error: Could not connect to site.");
                     System.exit(1);
                 }
-                if(i % 10 == 1) System.out.print("Scraping results " + String.valueOf(i) + " - " + String.valueOf(i+9) + ".");
-                else if(i % 10 == 0) System.out.print(".\n");
-                else System.out.print(".");
+
+                //PROGRESS
+                if(i % 30 == 1) System.out.print("Scraping results " + i + " - " + String.valueOf(num-1) + ".");
+                else if(i % 30 == 0) System.out.print(".\n");
+                else if(i%2 != 0) System.out.print(".");
+
                 Element n = null;
                 try {
                     n = site.selectFirst(".page");
@@ -135,7 +139,7 @@ public class TAScraper {
                 counter++;
             }
         }
-        System.out.println("Success!");
+        System.out.println("\nSuccess!");
         return scrapeResults;
     }
 }

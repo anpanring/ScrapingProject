@@ -38,44 +38,37 @@ public class App {
         }
         if(args.length != 3) {
             error("Incorrect number of args.");
-            //System.out.println("Error: Incorrect number of args.");
             System.exit(1);
         }
         try {
             num = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
             error("Invalid number.");
-            //System.out.println("Error: Invalid number.");
             System.exit(1);
         }
         if(num > 100){
             error("Number must be under 100.");
-            // System.out.println("Error: Number must be under 100.");
             System.exit(1);
-        } else if(num == 0) {
-            error("Number cannot be zero.");
-            //System.out.println("Error: Number is zero or not a multiple of 10.");
+        } else if(num == 0 || num < 0) {
+            error("Number cannot be zero or negative.");
             System.exit(1);
-        } else if(num % 10 != 0){
+        } /*else if(num % 10 != 0){
             num = num / 10 * 10;
-        }
+        }*/
         if(args[2].equalsIgnoreCase("-nyc")) location = "New%20York%2C%20NY";
         else {
             if(args[0].equals("-ta")){
                 error("Tripadvisor source only takes -nyc location.");
-                //System.out.println("Error: Tripadvisor source only takes -nyc location.");
                 System.exit(1);
             }
             if(args[2].length() != 5){
                 error("Invalid zip code.");
-                //System.out.println("Error: Invalid zipcode.");
                 System.exit(1);
             } else {
                 try {
                     int zipTest = Integer.parseInt(args[2]);
                 } catch (NumberFormatException e) {
                     error("Invalid location.");
-                    //System.out.println("Error: Invalid location.");
                     System.exit(1);
                 }
             }
@@ -89,7 +82,6 @@ public class App {
             csvWriter.writeAll(trip.results());
         } else {
             error("Invalid source.");
-            //System.out.println("Error: Invalid source.");
             System.exit(1);
         }
         System.out.println("Results written to \"" + file.getName() + "\".");
