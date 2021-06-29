@@ -18,7 +18,7 @@
 From within the project directory, use the command ./reviewscrape with these three
 parameters in the following order:
 1. Source: options are either -yelp for Yelp or -ta for Tripadvisor
-2. Number of results: any number that is divisible by 10, under 100, and not 0.
+2. Number of results: any number within 0 < # < 100.
 3. Location: Can either use -nyc for New York businesses or specify a 5-digit
 zip code.
 
@@ -26,10 +26,10 @@ Example: ./reviewscrape -yelp 40 94038
 This command would return a .csv file with 40 results from where I live in
 Moss Beach.
 
- * ./reviewscrape -h
-    * Will show instructions and example on how to run program
+"Help" command to show instructions and example:
+./reviewscrape -h 
 
-Results will be written to file "new.csv" in the project folder.
+All results will be written to file "new.csv" in the project folder.
 
 ## What I would do next with more time
  * Find gift card information
