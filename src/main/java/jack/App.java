@@ -79,7 +79,7 @@ public class App {
                 YelpScraper yelp = new YelpScraper(num, location);
                 csvWriter.writeAll(yelp.results());
             } catch (Exception e) {
-                System.out.println("ERROR!!!!! yelp scraper does NOT work :(");
+                System.out.println("Error: YelpScraper");
             }
         } else if(args[0].equals("-ta")){
             TAScraper trip = new TAScraper(num);

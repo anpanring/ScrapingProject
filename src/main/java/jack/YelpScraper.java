@@ -59,12 +59,18 @@ public class YelpScraper {
                 } catch (Exception e) {
                     System.out.println("failed to connect");
                 }
-                Element n = site.selectFirst("div.padding-b2__373c0__34gV1"); //div containing website, phone #, address
+                Element n = null;
+                try {
+                    n = site.select("div.padding-t2__373c0__3FhIz").get(4);
+                } catch (Exception e) {
+
+                }
+                //Element n = site.selectFirst("div.padding-b2__373c0__34gV1"); //div containing website, phone #, address
                 Element amenDiv = null;
                 Elements amenities = null;
                 ArrayList<String> amenList = null;
                 try { //For finding amenities
-                    amenDiv = site.selectFirst(".layout-wrap__373c0__34d4b");
+                    amenDiv = site.selectFirst(".layout-2-units__373c0__7D8Tx");
                     amenities = amenDiv.select("span.css-1h1j0y3");
                     amenList = new ArrayList<String>();
                     for(Element e : amenities) {
@@ -78,9 +84,10 @@ public class YelpScraper {
                 //Element address;
                 //Elements spans;
                 try { //Address
-                    address = address + link.selectFirst("p.css-1bmgof7 > span").text()
+                    address = n.selectFirst("p.css-chtywg").text();
+                    /*address = address + link.selectFirst("p.css-1bmgof7 > span").text()
                             + ", " + link.selectFirst("p.css-znumc2 > span").text();
-                    /*address = n.selectFirst("address");
+                    address = n.selectFirst("address");
                     spans = address.select("p > span");
                     StringBuilder addy = new StringBuilder();
                     System.out.println("Span size: " + spans.size());
