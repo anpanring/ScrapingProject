@@ -19,7 +19,7 @@ public class YelpScraper {
     public ArrayList<String[]> results(){
         ArrayList<String[]> scrapeResults = new ArrayList<String[]>();
         String url;
-        int leftover = numResults % 10; //4
+        int leftover = numResults % 10;
         int numPages;
         if(numResults % 10 == 0) numPages = numResults;
         else numPages = (numResults / 10 + 1) * 10 ; //10
@@ -41,7 +41,7 @@ public class YelpScraper {
                 System.out.println("Success");
             }
             //int sponsored = 0;
-            Elements links = page.select("div.container__09f24__21w3G");
+            Elements links = page.select("div.container__09f24__sxa9-");
             int num;
             if(start + 10 > numResults) num = leftover;
             else num = links.size() - 3;
@@ -53,6 +53,8 @@ public class YelpScraper {
                 Document site = null;
                 Element link = links.get(i);
                 try { //Connecting to restaurant's Yelp page
+                    //String website_address = "https://www.yelp.com" + link.selectFirst("a.css-166la90").attr("href");
+                    //info[2] = website_address;
                     site = Jsoup.connect("https://www.yelp.com" + link.selectFirst("a.css-166la90").attr("href")).get();
                 } catch (Exception e) {
                     System.out.println("failed to connect");
@@ -72,15 +74,22 @@ public class YelpScraper {
 
                 }
                 info[0] = link.selectFirst("a.css-166la90").text(); //Merchant Name
+                String address = "";
+                //Element address;
+                //Elements spans;
                 try { //Address
-                    Element address = n.selectFirst("address");
-                    Elements spans = address.select("span");
-                    String addy = "";
+                    address = address + link.selectFirst("p.css-1bmgof7 > span").text()
+                            + ", " + link.selectFirst("p.css-znumc2 > span").text();
+                    /*address = n.selectFirst("address");
+                    spans = address.select("p > span");
+                    StringBuilder addy = new StringBuilder();
+                    System.out.println("Span size: " + spans.size());
                     for(Element span : spans){
-                        addy += span.text();
-                    }
-                    info[1] = addy;
+                        addy.append(span.text());
+                    }*/
+                    info[1] = address;
                 } catch (Exception e) {
+                    //System.out.println("Failed to fetch address");
                     info[1] = "failed to fetch address";
                 }
                 try { //Website
