@@ -22,7 +22,7 @@ public class YelpScraper {
         int leftover = numResults % 10;
         int numPages;
         if(numResults % 10 == 0) numPages = numResults;
-        else numPages = (numResults / 10 + 1) * 10 ; //10
+        else numPages = (numResults / 10 + 1) * 10 ; //Round up
         for(int start = 0; start < numPages; start += 10) {
             url = "https://www.yelp.com/search?find_desc=Restaurants&find_loc=" + location + "&ns=1&start=" + String.valueOf(start);
             Document page = null;
@@ -40,32 +40,63 @@ public class YelpScraper {
                 }
                 System.out.println("Success");
             }
-            //int sponsored = 0;
+
             Elements links = page.select("div.container__09f24__sxa9-");
             int num;
             if(start + 10 > numResults) num = leftover;
             else num = links.size() - 3;
             System.out.print("Scraping results " + String.valueOf(start+1) + " - " + String.valueOf(start + num));
-            for(int i = 3; i < num + 3; i++) {
-                //if(i < 3) continue;
-                //if (i == 13) break;
+            for(int i = 2; i < num + 2; i++) {
                 String[] info = new String[10]; //Array for adding to CSV
                 Document site = null;
                 Element link = links.get(i);
                 try { //Connecting to restaurant's Yelp page
-                    //String website_address = "https://www.yelp.com" + link.selectFirst("a.css-166la90").attr("href");
-                    //info[2] = website_address;
                     site = Jsoup.connect("https://www.yelp.com" + link.selectFirst("a.css-166la90").attr("href")).get();
                 } catch (Exception e) {
                     System.out.println("failed to connect");
                 }
                 Element n = null;
                 try {
-                    n = site.select("div.padding-t2__373c0__3FhIz").get(4);
+                    n = site.selectFirst("body");
                 } catch (Exception e) {
 
                 }
-                //Element n = site.selectFirst("div.padding-b2__373c0__34gV1"); //div containing website, phone #, address
+
+                info[0] = link.selectFirst("a.css-166la90").text(); //Merchant Name - FIXED
+                try { //Address - FIXED
+                    info[1] = n.selectFirst("p.css-chtywg").text();;
+                } catch (Exception e) {
+                    info[1] = "failed to fetch address";
+                }
+                try { //Website - FIXED
+                    Elements webLinks = site.select("a.css-ac8spe");
+                    info[2] = "failed to fetch site";
+                    for(Element e : webLinks){
+                        if(e.attr("target").equals("_blank")) {
+                            info[2] = e.text();
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    info[2] = "failed to fetch site";
+                }
+                try { //Cost - FIXED
+                    info[4] = link.selectFirst(".priceRange__09f24__2GspP").text();
+                } catch (NullPointerException e) {
+                    info[4] = "failed to fetch cost";
+                }
+                try { //Rating - FIXED
+                    info[5] = link.selectFirst(".i-stars__09f24___sZu0").attr("aria-label").replace(" star rating", "");
+                } catch (NullPointerException e) {
+                    info[5] = "failed to fetch rating";
+                }
+                /*try { //Gift card - IN PROGRESS
+                    if(link.selectFirst(".raw__09f24__3Azrj").text().equals) info[6] = "y";
+                    else info[6] = "n";
+                } catch (Exception e) {
+                    info[6] = "n";
+                }*/
+
                 Element amenDiv = null;
                 Elements amenities = null;
                 ArrayList<String> amenList = null;
@@ -79,61 +110,20 @@ public class YelpScraper {
                 } catch (Exception e){
 
                 }
-                info[0] = link.selectFirst("a.css-166la90").text(); //Merchant Name
-                String address = "";
-                //Element address;
-                //Elements spans;
-                try { //Address
-                    address = n.selectFirst("p.css-chtywg").text();
-                    /*address = address + link.selectFirst("p.css-1bmgof7 > span").text()
-                            + ", " + link.selectFirst("p.css-znumc2 > span").text();
-                    address = n.selectFirst("address");
-                    spans = address.select("p > span");
-                    StringBuilder addy = new StringBuilder();
-                    System.out.println("Span size: " + spans.size());
-                    for(Element span : spans){
-                        addy.append(span.text());
-                    }*/
-                    info[1] = address;
-                } catch (Exception e) {
-                    //System.out.println("Failed to fetch address");
-                    info[1] = "failed to fetch address";
-                }
-                try { //Website
-                    Element website = n.selectFirst("a");
-                    if(!(website.attr("href").substring(0, 4).equals("/biz"))) info[2] = "no website";
-                    else info[2] = n.selectFirst("a").text();
-                } catch (Exception e) {
-                    info[2] = "failed to fetch site";
-                }
-                try { //Cost
-                    info[4] = link.selectFirst(".priceRange__09f24__2O6le").text();
-                } catch (NullPointerException e) {
-                    info[4] = "failed to fetch cost";
-                }
-                try { //Rating
-                    info[5] = link.selectFirst(".i-stars__09f24__1T6rz").attr("aria-label").replace(" star rating", "");
-                } catch (NullPointerException e) {
-                    info[5] = "failed to fetch rating";
-                }
-                try {
+                try { //Reservations - FIXED
                     if(amenList.contains("Takes Reservations")) info[7] = "y";
                     else info[7] = "n";
                 } catch (Exception e){
                     info[7] = "n";
                 }
-                try {
+                try { //Delivery - FIXED
                     if(amenList.contains("Offers Delivery")) info[8] = "y";
                     else info[8] = "n";
                 } catch (Exception e){
                     info[8] = "n";
                 }
                 info[9] = "Yelp"; //Source
-                /*try { //Number of reviews
-                    info[2] = link.selectFirst(".reviewCount__09f24__EUXPN").text();
-                } catch (NullPointerException e) {
 
-                }*/
                 scrapeResults.add(info);
                 System.out.print(".");
             }
